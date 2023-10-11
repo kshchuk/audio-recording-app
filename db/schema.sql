@@ -5,11 +5,12 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS public.classical_compositions
 (
-    classical_composition_id uuid NOT NULL,
+    track_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    author character varying(100) COLLATE pg_catalog."default",
+    disc_id uuid,
     epoch character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT classical_compositions_pkey PRIMARY KEY (classical_composition_id),
-    CONSTRAINT classical_compositions_classical_composition_id_classical_c_key UNIQUE (classical_composition_id)
-        INCLUDE(classical_composition_id)
+    duration time without time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.discs
@@ -23,22 +24,23 @@ CREATE TABLE IF NOT EXISTS public.discs
 
 CREATE TABLE IF NOT EXISTS public.pop_compositions
 (
-    pop_composition_id uuid NOT NULL,
+    track_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    author character varying(100) COLLATE pg_catalog."default",
+    disc_id uuid,
     genre character varying(100) COLLATE pg_catalog."default" NOT NULL,
     popularity integer,
-    CONSTRAINT pop_compositions_pkey PRIMARY KEY (pop_composition_id),
-    CONSTRAINT pop_compositions_pop_composition_id_pop_composition_id1_key UNIQUE (pop_composition_id)
-        INCLUDE(pop_composition_id)
-        DEFERRABLE
+    duration time without time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.rock_compositions
 (
-    rock_composition_id uuid NOT NULL,
+    track_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    author character varying(100) COLLATE pg_catalog."default",
+    disc_id uuid,
     style character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT rock_compositions_pkey PRIMARY KEY (rock_composition_id),
-    CONSTRAINT rock_compositions_rock_composition_id_rock_composition_id1_key UNIQUE (rock_composition_id)
-        INCLUDE(rock_composition_id)
+    duration time without time zone NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.tracks
@@ -46,43 +48,12 @@ CREATE TABLE IF NOT EXISTS public.tracks
     track_id uuid NOT NULL DEFAULT uuid_generate_v4(),
     title character varying(255) COLLATE pg_catalog."default" NOT NULL,
     author character varying(100) COLLATE pg_catalog."default",
-    duration integer NOT NULL,
     disc_id uuid,
+    duration time without time zone NOT NULL,
     CONSTRAINT tracks_pkey PRIMARY KEY (track_id),
     CONSTRAINT tracks_track_id_track_id1_key UNIQUE (track_id)
         INCLUDE(track_id)
 );
-
-ALTER TABLE IF EXISTS public.classical_compositions
-    ADD CONSTRAINT classical_compositions_classical_composition_id_fkey FOREIGN KEY (classical_composition_id)
-    REFERENCES public.tracks (track_id) MATCH SIMPLE
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-    DEFERRABLE;
-CREATE INDEX IF NOT EXISTS classical_compositions_classical_composition_id_classical_c_key
-    ON public.classical_compositions(classical_composition_id);
-
-
-ALTER TABLE IF EXISTS public.pop_compositions
-    ADD CONSTRAINT pop_compositions_pop_composition_id_fkey FOREIGN KEY (pop_composition_id)
-    REFERENCES public.tracks (track_id) MATCH SIMPLE
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-    DEFERRABLE;
-CREATE INDEX IF NOT EXISTS pop_compositions_pop_composition_id_pop_composition_id1_key
-    ON public.pop_compositions(pop_composition_id);
-
-
-ALTER TABLE IF EXISTS public.rock_compositions
-    ADD CONSTRAINT rock_compositions_rock_composition_id_fkey FOREIGN KEY (rock_composition_id)
-    REFERENCES public.tracks (track_id) MATCH SIMPLE
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-    DEFERRABLE
-    NOT VALID;
-CREATE INDEX IF NOT EXISTS rock_compositions_pkey
-    ON public.rock_compositions(rock_composition_id);
-
 
 ALTER TABLE IF EXISTS public.tracks
     ADD CONSTRAINT tracks_disc_id_fkey FOREIGN KEY (disc_id)
