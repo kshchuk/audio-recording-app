@@ -8,5 +8,5 @@ import java.util.*
  * DTO for {@link com.project.audiorecording.audiorecordingserver.domain.entity.ClassicalComposition}
  */
 data class ClassicalCompositionDto(
-    val epoch: String? = null
+    var epoch: String? = null
 ) : TrackDto()

@@ -8,5 +8,5 @@ import java.util.*
  * DTO for {@link com.project.audiorecording.audiorecordingserver.domain.entity.RockComposition}
  */
 data class RockCompositionDto(
-    val style: String? = null
+    var style: String? = null
 ) : TrackDto()

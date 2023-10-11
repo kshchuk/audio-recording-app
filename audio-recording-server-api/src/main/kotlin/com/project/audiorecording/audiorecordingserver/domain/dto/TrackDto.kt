@@ -8,9 +8,9 @@ import java.util.*
  * DTO for {@link com.project.audiorecording.audiorecordingserver.domain.entity.Track}
  */
 abstract class TrackDto(
-    val id: UUID? = null,
-    val title: String? = null,
-    val author: String? = null,
-    val disc: DiscDto? = null,
-    val duration: Duration? = null
+    var id: UUID? = null,
+    var title: String? = null,
+    var author: String? = null,
+    var disc: DiscDto? = null,
+    var duration: Duration? = null
 ) : Serializable
