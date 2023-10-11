@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity
 @Table(name = "tracks")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract class Track {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
