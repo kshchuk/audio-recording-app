@@ -18,7 +18,9 @@ class RockCompositionService(
 ) : CrudService<RockComposition, RockCompositionDto, UUID> {
     override fun create(dto: RockCompositionDto): RockCompositionDto {
         val rockComposition = getEntity(dto)
-        return rockCompositionMapper.toDto(rockCompositionRepository.save(rockComposition))
+        val rockDto =  rockCompositionMapper.toDto(rockCompositionRepository.save(rockComposition))
+        trackService.updateDisc(rockDto.disc!!.id!!)
+        return rockDto
     }
 
     override fun read(id: UUID): RockCompositionDto {
@@ -28,12 +30,15 @@ class RockCompositionService(
     override fun update(dto: RockCompositionDto): RockCompositionDto {
         requireOne(dto.id!!)
         val updatedRockComposition = getEntity(dto)
-        return rockCompositionMapper.toDto(rockCompositionRepository.save(updatedRockComposition))
+        val rockDto = rockCompositionMapper.toDto(rockCompositionRepository.save(updatedRockComposition))
+        trackService.updateDisc(rockDto.disc!!.id!!)
+        return rockDto
     }
 
     override fun delete(id: UUID) {
-        requireOne(id)
+        val rockDto = read(id)
         rockCompositionRepository.deleteById(id)
+        trackService.updateDisc(rockDto.disc!!.id!!)
     }
 
     override fun getAll(): List<RockCompositionDto> {

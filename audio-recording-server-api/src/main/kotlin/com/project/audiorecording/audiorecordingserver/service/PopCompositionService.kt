@@ -18,7 +18,9 @@ class PopCompositionService(
 ) : CrudService<PopComposition, PopCompositionDto, UUID> {
     override fun create(dto: PopCompositionDto): PopCompositionDto {
         val popComposition = getEntity(dto)
-        return popCompositionMapper.toDto(popCompositionRepository.save(popComposition))
+        val popDto = popCompositionMapper.toDto(popCompositionRepository.save(popComposition))
+        trackService.updateDisc(popDto.disc!!.id!!)
+        return popDto
     }
 
     override fun read(id: UUID): PopCompositionDto {
@@ -28,12 +30,15 @@ class PopCompositionService(
     override fun update(dto: PopCompositionDto): PopCompositionDto {
         requireOne(dto.id!!)
         val updatedPopComposition = getEntity(dto)
-        return popCompositionMapper.toDto(popCompositionRepository.save(updatedPopComposition))
+        val popDto = popCompositionMapper.toDto(popCompositionRepository.save(updatedPopComposition))
+        trackService.updateDisc(popDto.disc!!.id!!)
+        return popDto
     }
 
     override fun delete(id: UUID) {
-        requireOne(id)
+        val popDto = read(id)
         popCompositionRepository.deleteById(id)
+        trackService.updateDisc(popDto.disc!!.id!!)
     }
 
     override fun getAll(): List<PopCompositionDto> {

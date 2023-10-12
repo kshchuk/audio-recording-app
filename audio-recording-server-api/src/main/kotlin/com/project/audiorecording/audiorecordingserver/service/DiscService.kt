@@ -8,10 +8,12 @@ import com.project.audiorecording.audiorecordingserver.domain.entity.Disc
 import com.project.audiorecording.audiorecordingserver.domain.entity.Track
 import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.DiscRepository
+import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.time.Duration
 
 @Service
+@RequiredArgsConstructor
 class DiscService(
     private val discRepository: DiscRepository,
     private val discMapper: IMapper<Disc, DiscDto, UUID>,
@@ -67,6 +69,19 @@ class DiscService(
     fun calculateTotalDuration(disc: UUID): Duration {
         val discEntity = requireOne(disc)
         return discEntity.tracks?.map { it.duration }?.reduce { acc, duration -> acc?.plus(duration) }!!
+    }
+
+    /**
+     * @brief Update the disc with the total duration and the number of tracks 
+     *
+     * @param disc - id of the disc
+     * @return - updated disc
+     */
+    fun updateDisc(disc: UUID) : DiscDto {
+        val discEntity = requireOne(disc)
+        discEntity.trackNumber = discEntity.tracks?.size
+        discEntity.totalDuration = discEntity.tracks?.map { it.duration }?.reduce { acc, duration -> acc?.plus(duration) }!!
+        return discMapper.toDto(discRepository.save(discEntity))
     }
 
     fun findSongsByLength(disc: UUID, min: Duration, max: Duration) : List<TrackDto> {

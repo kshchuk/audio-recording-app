@@ -8,18 +8,21 @@ import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.TrackRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
+import javax.swing.text.html.parser.Entity
 
 @Service
 class TrackService(
     private val trackRepository: TrackRepository,
     private val trackMapper: IMapper<Track, TrackDto, UUID>,
-    private val discService: CrudService<Disc, DiscDto, UUID>
+    private val discService: DiscService
 )
     : CrudService<Track, TrackDto, UUID>
 {
     override fun create(dto: TrackDto): TrackDto {
         val track = getEntity(dto)
-        return trackMapper.toDto(trackRepository.save(track))
+        val trackDto =  trackMapper.toDto(trackRepository.save(track))
+        updateDisc(trackDto.disc!!.id!!)
+        return trackDto
     }
 
     override fun read(id: UUID): TrackDto {
@@ -29,12 +32,16 @@ class TrackService(
     override fun update(dto: TrackDto): TrackDto {
         requireOne(dto.id!!)
         val updatedTrack = getEntity(dto)
-        return trackMapper.toDto(trackRepository.save(updatedTrack))
+        val trackDto = trackMapper.toDto(trackRepository.save(updatedTrack))
+        updateDisc(trackDto.disc!!.id!!)
+        return trackDto
     }
 
     override fun delete(id: UUID) {
+        val trackDto = read(id)
         removeEntity(id)
         trackRepository.deleteById(id)
+        updateDisc(trackDto.disc!!.id!!)
     }
 
     override fun getAll(): List<TrackDto> {
@@ -60,5 +67,9 @@ class TrackService(
 
     private fun removeEntity(id: UUID) {
         requireOne(id)
+    }
+
+    fun updateDisc(discId: UUID) {
+        discService.updateDisc(discId)
     }
 }
