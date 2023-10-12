@@ -24,8 +24,8 @@ class DiscService(
         return discRepository.save(disc)
     }
 
-    override fun read(id: UUID): Disc {
-        return requireOne(id)
+    override fun read(id: UUID): DiscDto {
+        return discMapper.toDto(requireOne(id))
     }
 
     override fun update(dto: DiscDto): Disc {
@@ -37,11 +37,12 @@ class DiscService(
     }
 
     override fun delete(id: UUID) {
+        requireOne(id)
         discRepository.deleteById(id)
     }
 
-    override fun getAll(): List<Disc> {
-        return discRepository.findAll()
+    override fun getAll(): List<DiscDto> {
+        return discMapper.ToDtoList(discRepository.findAll())!!
     }
 
     override fun requireOne(id: UUID): Disc {

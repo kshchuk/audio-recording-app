@@ -12,7 +12,8 @@ class DiscMapper : IMapper<Disc, DiscDto, UUID> {
             id = foundEntity.id,
             name = dto.name,
             trackNumber = dto.trackNumber,
-            totalDuration = dto.totalDuration
+            totalDuration = dto.totalDuration,
+            tracks = foundEntity.tracks
         )
     }
 
@@ -21,7 +22,8 @@ class DiscMapper : IMapper<Disc, DiscDto, UUID> {
             id = entity.id,
             name = entity.name,
             trackNumber = entity.trackNumber,
-            totalDuration = entity.totalDuration
+            totalDuration = entity.totalDuration,
+            tracks = entity.tracks?.map { TrackMapper().toDto(it) }
         )
     }
 
@@ -39,7 +41,8 @@ class DiscMapper : IMapper<Disc, DiscDto, UUID> {
             id = discDto.id ?: disc.id,
             name = discDto.name ?: disc.name,
             trackNumber = discDto.trackNumber ?: disc.trackNumber,
-            totalDuration = discDto.totalDuration ?: disc.totalDuration
+            totalDuration = discDto.totalDuration ?: disc.totalDuration,
+            tracks = disc.tracks
         )
     }
 }

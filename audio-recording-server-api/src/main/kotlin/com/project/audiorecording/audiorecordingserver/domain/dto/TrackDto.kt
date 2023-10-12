@@ -7,7 +7,7 @@ import java.util.*
 /**
  * DTO for {@link com.project.audiorecording.audiorecordingserver.domain.entity.Track}
  */
-abstract class TrackDto(
+open class TrackDto(
     var id: UUID? = null,
     var title: String? = null,
     var author: String? = null,
