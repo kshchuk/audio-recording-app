@@ -3,12 +3,16 @@ package com.project.audiorecording.audiorecordingserver.controller
 import com.project.audiorecording.audiorecordingserver.domain.dto.DiscDto
 import com.project.audiorecording.audiorecordingserver.domain.dto.TrackDto
 import com.project.audiorecording.audiorecordingserver.service.DiscService
+import lombok.RequiredArgsConstructor
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.time.Duration
 import java.util.*
 
+@Validated
 @RestController
+@RequiredArgsConstructor
 class DiscController(
     private val discService: DiscService,
 ) : IRestController<DiscDto, UUID> {
