@@ -2,8 +2,9 @@ package com.project.audiorecording.audiorecordingserver.repository;
 
 import com.project.audiorecording.audiorecordingserver.domain.entity.Track
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.ListPagingAndSortingRepository
+import org.springframework.stereotype.Repository
 import java.util.*
 
+@Repository
 interface TrackRepository : JpaRepository<Track, UUID> {
 }

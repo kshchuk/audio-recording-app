@@ -69,7 +69,7 @@ class DiscService(
         return discEntity.tracks?.map { it.duration }?.reduce { acc, duration -> acc?.plus(duration) }!!
     }
 
-    fun findSongsByLenght(disc: UUID, min: Duration, max: Duration) : List<TrackDto> {
+    fun findSongsByLength(disc: UUID, min: Duration, max: Duration) : List<TrackDto> {
         val discEntity = requireOne(disc)
         return discEntity.tracks?.filter { it.duration?.seconds!! >= min.seconds &&
             it.duration?.seconds!! <= max.seconds }?.map { trackMapper.toDto(it) }!!

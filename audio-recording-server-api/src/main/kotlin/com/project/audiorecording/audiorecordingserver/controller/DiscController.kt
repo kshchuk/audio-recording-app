@@ -54,9 +54,9 @@ class DiscController(
     }
 
     @GetMapping("/discs/{id}/filter")
-    fun findSongsByLenght(@PathVariable id: UUID,
+    fun findSongsByLength(@PathVariable id: UUID,
                           @RequestParam min: Duration,
                           @RequestParam max: Duration): List<TrackDto> {
-        return discService.findSongsByLenght(id, min, max)
+        return discService.findSongsByLength(id, min, max)
     }
 }
