@@ -47,7 +47,7 @@ class TrackService(
         )
     }
 
-    private fun getEntity(dto: TrackDto): Track {
+    fun getEntity(dto: TrackDto): Track {
         val disc = discService.requireOne(dto.disc!!.id!!)
         return Track(
             id = dto.id,
