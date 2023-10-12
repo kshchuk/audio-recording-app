@@ -17,19 +17,19 @@ class TrackService(
 )
     : CrudService<Track, TrackDto, UUID>
 {
-    override fun create(dto: TrackDto): Track {
+    override fun create(dto: TrackDto): TrackDto {
         val track = getEntity(dto)
-        return trackRepository.save(track)
+        return trackMapper.toDto(trackRepository.save(track))
     }
 
     override fun read(id: UUID): TrackDto {
         return trackMapper.toDto(requireOne(id))
     }
 
-    override fun update(dto: TrackDto): Track {
+    override fun update(dto: TrackDto): TrackDto {
         requireOne(dto.id!!)
         val updatedTrack = getEntity(dto)
-        return trackRepository.save(updatedTrack)
+        return trackMapper.toDto(trackRepository.save(updatedTrack))
     }
 
     override fun delete(id: UUID) {
@@ -49,6 +49,7 @@ class TrackService(
 
     fun getEntity(dto: TrackDto): Track {
         val disc = discService.requireOne(dto.disc!!.id!!)
+
         return Track(
             id = dto.id,
             title = dto.title,

@@ -16,19 +16,19 @@ class ClassicalCompositionService(
     private val classicalCompositionMapper: ClassicalCompositionMapper,
     private val trackService: TrackService,
 ) : CrudService<ClassicalComposition, ClassicalCompositionDto, UUID> {
-    override fun create(dto: ClassicalCompositionDto): ClassicalComposition {
+    override fun create(dto: ClassicalCompositionDto): ClassicalCompositionDto {
         val classicalComposition = getEntity(dto)
-        return classicalCompositionRepository.save(classicalComposition)
+        return classicalCompositionMapper.toDto(classicalCompositionRepository.save(classicalComposition))
     }
 
     override fun read(id: UUID): ClassicalCompositionDto {
         return classicalCompositionMapper.toDto(requireOne(id))
     }
 
-    override fun update(dto: ClassicalCompositionDto): ClassicalComposition {
+    override fun update(dto: ClassicalCompositionDto): ClassicalCompositionDto {
         requireOne(dto.id!!)
         val updatedClassicalComposition = getEntity(dto)
-        return classicalCompositionRepository.save(updatedClassicalComposition)
+        return classicalCompositionMapper.toDto(classicalCompositionRepository.save(updatedClassicalComposition))
     }
 
     override fun delete(id: UUID) {

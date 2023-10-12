@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.ListPagingAndSortingRepository
 import java.util.*
 
-interface TrackRepository : ListPagingAndSortingRepository<Track, UUID>, JpaRepository<Track, UUID> {
+interface TrackRepository : JpaRepository<Track, UUID> {
 }
