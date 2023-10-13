@@ -5,6 +5,7 @@ import com.project.audiorecording.audiorecordingserver.domain.entity.Track
 import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.TrackRepository
 import lombok.RequiredArgsConstructor
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
 import java.util.UUID
@@ -14,6 +15,7 @@ import java.util.UUID
 class TrackService(
     private val trackRepository: TrackRepository,
     private val trackMapper: IMapper<Track, TrackDto, UUID>,
+    @Lazy
     private val discService: IDiscService
 )
     : ITrackService

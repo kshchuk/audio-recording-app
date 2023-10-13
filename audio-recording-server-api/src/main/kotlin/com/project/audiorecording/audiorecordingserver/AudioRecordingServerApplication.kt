@@ -2,6 +2,9 @@ package com.project.audiorecording.audiorecordingserver
 
 import com.project.audiorecording.audiorecordingserver.controller.*
 import com.project.audiorecording.audiorecordingserver.domain.dto.*
+import jakarta.annotation.PostConstruct
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
@@ -10,7 +13,7 @@ import java.time.Duration
 import java.util.*
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = ["com.project.audiorecording.audiorecordingserver"])
+@EnableJpaRepositories(basePackages = ["com.project.audiorecording.audiorecordingserver.repository"])
 class AudioRecordingServerApplication(
     override val discController: DiscController,
     override val trackController: TrackController,
@@ -277,7 +280,15 @@ class AudioRecordingServerApplication(
             println("Invalid disc id")
         }
     }
+
+    @Autowired
+    lateinit var app: App
+
+    @PostConstruct
+    fun onApplicationStart() {
+        app.start()
+    }
 }
 fun main(args: Array<String>) {
-    runApplication<AudioRecordingServerApplication>(*args)
+    SpringApplication.run(AudioRecordingServerApplication::class.java, *args)
 }
