@@ -4,6 +4,7 @@ import com.project.audiorecording.audiorecordingserver.domain.dto.ClassicalCompo
 import com.project.audiorecording.audiorecordingserver.domain.entity.ClassicalComposition
 import com.project.audiorecording.audiorecordingserver.mapper.ClassicalCompositionMapper
 import com.project.audiorecording.audiorecordingserver.repository.ClassicalCompositionRepository
+import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -11,6 +12,7 @@ import java.util.UUID
  * Service for {@link ClassicalComposition}
  */
 @Service
+@RequiredArgsConstructor
 class ClassicalCompositionService(
     private val classicalCompositionRepository: ClassicalCompositionRepository,
     private val classicalCompositionMapper: ClassicalCompositionMapper,

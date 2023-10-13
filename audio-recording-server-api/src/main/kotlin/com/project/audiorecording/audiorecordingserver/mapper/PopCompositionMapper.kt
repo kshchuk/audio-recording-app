@@ -3,8 +3,10 @@ package com.project.audiorecording.audiorecordingserver.mapper
 import com.project.audiorecording.audiorecordingserver.domain.dto.PopCompositionDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.PopComposition
 import org.mapstruct.*
+import org.springframework.stereotype.Component
 import java.util.*
 
+@Component
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 class PopCompositionMapper : IMapper<PopComposition, PopCompositionDto, UUID> {
     override fun toEntity(dto: PopCompositionDto, foundEntity: PopComposition): PopComposition {

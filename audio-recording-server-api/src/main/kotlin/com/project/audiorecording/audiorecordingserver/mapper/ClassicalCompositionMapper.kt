@@ -3,8 +3,10 @@ package com.project.audiorecording.audiorecordingserver.mapper
 import com.project.audiorecording.audiorecordingserver.domain.dto.ClassicalCompositionDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.ClassicalComposition
 import org.mapstruct.*
+import org.springframework.stereotype.Component
 import java.util.*
 
+@Component
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 class ClassicalCompositionMapper : IMapper<ClassicalComposition, ClassicalCompositionDto, UUID> {
     override fun toEntity(dto: ClassicalCompositionDto, foundEntity: ClassicalComposition): ClassicalComposition {

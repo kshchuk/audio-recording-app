@@ -3,9 +3,11 @@ package com.project.audiorecording.audiorecordingserver.mapper
 import com.project.audiorecording.audiorecordingserver.domain.dto.RockCompositionDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.RockComposition
 import org.mapstruct.*
+import org.springframework.stereotype.Component
 import java.util.*
 
 
+@Component
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 class RockCompositionMapper : IMapper<RockComposition, RockCompositionDto, UUID> {
     override fun toEntity(dto: RockCompositionDto, foundEntity: RockComposition): RockComposition {

@@ -4,6 +4,7 @@ import com.project.audiorecording.audiorecordingserver.domain.dto.PopComposition
 import com.project.audiorecording.audiorecordingserver.domain.entity.PopComposition
 import com.project.audiorecording.audiorecordingserver.mapper.PopCompositionMapper
 import com.project.audiorecording.audiorecordingserver.repository.PopCompositionRepository
+import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -11,6 +12,7 @@ import java.util.UUID
  * Service for {@link PopComposition}
  */
 @Service
+@RequiredArgsConstructor
 class PopCompositionService(
     private val popCompositionRepository: PopCompositionRepository,
     private val popCompositionMapper: PopCompositionMapper,

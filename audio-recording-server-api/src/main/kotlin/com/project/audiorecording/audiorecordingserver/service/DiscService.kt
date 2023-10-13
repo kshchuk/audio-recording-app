@@ -18,8 +18,8 @@ class DiscService(
     private val discRepository: DiscRepository,
     private val discMapper: IMapper<Disc, DiscDto, UUID>,
     private val trackMapper: IMapper<Track, TrackDto, UUID>,
-    private val trackService: CrudService<Track, TrackDto, UUID>
-) : CrudService<Disc, DiscDto, UUID>   {
+    private val trackService: ITrackService
+) : IDiscService {
 
     override fun create(dto: DiscDto): DiscDto {
         val disc = discMapper.toEntity(dto, Disc())
@@ -49,7 +49,7 @@ class DiscService(
         return discMapper.ToDtoList(discRepository.findAll())!!
     }
 
-    fun getAllTracks(discId: UUID) : List<TrackDto> {
+    override fun getAllTracks(discId: UUID) : List<TrackDto> {
         val disc = requireOne(discId)
         return discMapper.toDto(disc).tracks!!
     }
@@ -60,31 +60,25 @@ class DiscService(
         )
     }
 
-    fun insertTrack(disc: UUID, track: Track): DiscDto {
-        val discEntity = requireOne(disc)
-        discEntity.tracks?.add(track)
-        return discMapper.toDto(discRepository.save(discEntity))
-    }
-
-    fun calculateTotalDuration(disc: UUID): Duration {
-        val discEntity = requireOne(disc)
+    override fun calculateTotalDuration(discId: UUID): Duration {
+        val discEntity = requireOne(discId)
         return discEntity.tracks?.map { it.duration }?.reduce { acc, duration -> acc?.plus(duration) }!!
     }
 
     /**
      * @brief Update the disc with the total duration and the number of tracks 
      *
-     * @param disc - id of the disc
+     * @param discId - id of the disc
      * @return - updated disc
      */
-    fun updateDisc(disc: UUID) : DiscDto {
-        val discEntity = requireOne(disc)
+   override fun updateDisc(discId: UUID) : DiscDto {
+        val discEntity = requireOne(discId)
         discEntity.trackNumber = discEntity.tracks?.size
         discEntity.totalDuration = discEntity.tracks?.map { it.duration }?.reduce { acc, duration -> acc?.plus(duration) }!!
         return discMapper.toDto(discRepository.save(discEntity))
     }
 
-    fun findSongsByLength(disc: UUID, min: Duration, max: Duration) : List<TrackDto> {
+    override fun findSongsByLength(disc: UUID, min: Duration, max: Duration) : List<TrackDto> {
         val discEntity = requireOne(disc)
         return discEntity.tracks?.filter { it.duration?.seconds!! >= min.seconds &&
             it.duration?.seconds!! <= max.seconds }?.map { trackMapper.toDto(it) }!!
@@ -92,7 +86,7 @@ class DiscService(
 
     // Rearrange the songs on the disc based on style affiliation which is
     // specified in the subclass of the track class
-    fun sortSongsByStyle(disc: UUID) : List<TrackDto> {
+    override fun sortSongsByStyle(disc: UUID) : List<TrackDto> {
         val discEntity = requireOne(disc)
         return discEntity.tracks?.sortedBy { it::class.simpleName }?.map { trackMapper.toDto(it) }!!
     }

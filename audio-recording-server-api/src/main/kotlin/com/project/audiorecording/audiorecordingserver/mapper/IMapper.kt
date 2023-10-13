@@ -1,10 +1,11 @@
 package com.project.audiorecording.audiorecordingserver.mapper
 
 import org.mapstruct.BeanMapping
+import org.mapstruct.MapperConfig
 import org.mapstruct.MappingTarget
 import org.mapstruct.NullValuePropertyMappingStrategy
-import org.mapstruct.ReportingPolicy
 
+@MapperConfig(componentModel = "spring")
 interface IMapper<E, D, Id> {
     fun toEntity(dto: D, foundEntity: E): E
     fun toDto(entity: E): D

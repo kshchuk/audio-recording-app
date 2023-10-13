@@ -4,6 +4,7 @@ import com.project.audiorecording.audiorecordingserver.domain.dto.RockCompositio
 import com.project.audiorecording.audiorecordingserver.domain.entity.RockComposition
 import com.project.audiorecording.audiorecordingserver.mapper.RockCompositionMapper
 import com.project.audiorecording.audiorecordingserver.repository.RockCompositionRepository
+import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -11,6 +12,7 @@ import java.util.UUID
  * Service for {@link RockComposition}
  */
 @Service
+@RequiredArgsConstructor
 class RockCompositionService(
     private val rockCompositionRepository: RockCompositionRepository,
     private val rockCompositionMapper: RockCompositionMapper,

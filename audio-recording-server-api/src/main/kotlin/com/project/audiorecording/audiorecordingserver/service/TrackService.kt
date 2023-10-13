@@ -1,22 +1,22 @@
 package com.project.audiorecording.audiorecordingserver.service
 
-import com.project.audiorecording.audiorecordingserver.domain.dto.DiscDto
 import com.project.audiorecording.audiorecordingserver.domain.dto.TrackDto
-import com.project.audiorecording.audiorecordingserver.domain.entity.Disc
 import com.project.audiorecording.audiorecordingserver.domain.entity.Track
 import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.TrackRepository
+import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
+
 import java.util.UUID
-import javax.swing.text.html.parser.Entity
 
 @Service
+@RequiredArgsConstructor
 class TrackService(
     private val trackRepository: TrackRepository,
     private val trackMapper: IMapper<Track, TrackDto, UUID>,
-    private val discService: DiscService
+    private val discService: IDiscService
 )
-    : CrudService<Track, TrackDto, UUID>
+    : ITrackService
 {
     override fun create(dto: TrackDto): TrackDto {
         val track = getEntity(dto)
@@ -69,7 +69,7 @@ class TrackService(
         requireOne(id)
     }
 
-    fun updateDisc(discId: UUID) {
+    override fun updateDisc(discId: UUID) {
         discService.updateDisc(discId)
     }
 }

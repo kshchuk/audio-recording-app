@@ -10,13 +10,13 @@ import java.time.Duration
 import java.util.*
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = ["com.project.audiorecording.audiorecordingserver.repository"])
+@EnableJpaRepositories(basePackages = ["com.project.audiorecording.audiorecordingserver"])
 class AudioRecordingServerApplication(
     override val discController: DiscController,
     override val trackController: TrackController,
     override val rockCompositionController: RockCompositionController,
     override val popCompositionController: PopCompositionController,
-    override val classicalCompositionController: ClassicalCompositionController
+    override val classicalCompositionController: ClassicalCompositionController,
 
 ) : App {
 

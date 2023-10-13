@@ -6,8 +6,10 @@ import org.mapstruct.BeanMapping
 import org.mapstruct.Mapper
 import org.mapstruct.NullValuePropertyMappingStrategy
 import org.mapstruct.ReportingPolicy
+import org.springframework.stereotype.Component
 import java.util.*
 
+@Component
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 class TrackMapper : IMapper<Track, TrackDto, UUID> {
     override fun toEntity(dto: TrackDto, foundEntity: Track): Track {

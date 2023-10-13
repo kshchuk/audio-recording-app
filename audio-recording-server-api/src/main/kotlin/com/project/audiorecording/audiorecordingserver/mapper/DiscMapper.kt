@@ -3,8 +3,10 @@ package com.project.audiorecording.audiorecordingserver.mapper
 import com.project.audiorecording.audiorecordingserver.domain.dto.DiscDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.Disc
 import org.mapstruct.*
+import org.springframework.stereotype.Component
 import java.util.UUID
 
+@Component
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 class DiscMapper : IMapper<Disc, DiscDto, UUID> {
     override fun toEntity(dto: DiscDto, foundEntity: Disc): Disc {
