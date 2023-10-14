@@ -1,12 +1,15 @@
 package com.project.audiorecording.audiorecordingserver.service
 
+import com.project.audiorecording.audiorecordingserver.domain.dto.DiscDto
 import com.project.audiorecording.audiorecordingserver.domain.dto.TrackDto
+import com.project.audiorecording.audiorecordingserver.domain.entity.Disc
 import com.project.audiorecording.audiorecordingserver.domain.entity.Track
 import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.TrackRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 import java.util.UUID
 
@@ -16,14 +19,16 @@ class TrackService(
     private val trackRepository: TrackRepository,
     private val trackMapper: IMapper<Track, TrackDto, UUID>,
     @Lazy
-    private val discService: IDiscService
+    private val discService: IDiscService,
+    private val discMapper: IMapper<Disc, DiscDto, UUID>,
 )
     : ITrackService
 {
     override fun create(dto: TrackDto): TrackDto {
         val track = getEntity(dto)
         val trackDto =  trackMapper.toDto(trackRepository.save(track))
-        updateDisc(trackDto.disc!!.id!!)
+        trackDto.disc = discMapper.toDto(track.disc!!)
+        updateDisc(track.disc!!.id!!)
         return trackDto
     }
 
@@ -35,7 +40,8 @@ class TrackService(
         requireOne(dto.id!!)
         val updatedTrack = getEntity(dto)
         val trackDto = trackMapper.toDto(trackRepository.save(updatedTrack))
-        updateDisc(trackDto.disc!!.id!!)
+        trackDto.disc = discMapper.toDto(updatedTrack.disc!!)
+        updateDisc(updatedTrack.disc!!.id!!)
         return trackDto
     }
 
@@ -56,13 +62,17 @@ class TrackService(
         )
     }
 
+    @Transactional
     fun getEntity(dto: TrackDto): Track {
         val disc = discService.requireOne(dto.disc!!.id!!)
+        //var disc = discMapper.toEntity(dto.disc!!, Disc())
+        //disc.id = dto.disc!!.id
 
         return Track(
             id = dto.id,
             title = dto.title,
             duration = dto.duration,
+            author = dto.author,
             disc = disc
         )
     }

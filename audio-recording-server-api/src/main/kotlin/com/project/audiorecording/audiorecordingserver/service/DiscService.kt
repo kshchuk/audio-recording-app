@@ -4,12 +4,15 @@ import java.util.*
 
 import com.project.audiorecording.audiorecordingserver.domain.dto.DiscDto
 import com.project.audiorecording.audiorecordingserver.domain.dto.TrackDto
+import com.project.audiorecording.audiorecordingserver.domain.entity.ClassicalComposition
 import com.project.audiorecording.audiorecordingserver.domain.entity.Disc
+import com.project.audiorecording.audiorecordingserver.domain.entity.RockComposition
 import com.project.audiorecording.audiorecordingserver.domain.entity.Track
 import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.DiscRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 
 @Service
@@ -18,7 +21,6 @@ class DiscService(
     private val discRepository: DiscRepository,
     private val discMapper: IMapper<Disc, DiscDto, UUID>,
     private val trackMapper: IMapper<Track, TrackDto, UUID>,
-    private val trackService: ITrackService
 ) : IDiscService {
 
     override fun create(dto: DiscDto): DiscDto {
@@ -33,7 +35,7 @@ class DiscService(
     override fun update(dto: DiscDto): DiscDto {
         val disc = requireOne(dto.id!!)
         val updatedDisc = discMapper.toEntity(dto, disc)
-        return discMapper.toDto(discRepository.save(disc))
+        return discMapper.toDto(discRepository.save(updatedDisc))
     }
 
     override fun delete(id: UUID) {
@@ -67,6 +69,7 @@ class DiscService(
      * @param discId - id of the disc
      * @return - updated disc
      */
+    @Transactional
    override fun updateDisc(discId: UUID) : DiscDto {
         val discEntity = requireOne(discId)
         discEntity.trackNumber = discEntity.tracks?.size
@@ -84,6 +87,9 @@ class DiscService(
     // specified in the subclass of the track class
     override fun sortSongsByStyle(disc: UUID) : List<TrackDto> {
         val discEntity = requireOne(disc)
-        return discEntity.tracks?.sortedBy { it::class.simpleName }?.map { trackMapper.toDto(it) }!!
+        val rockTracks = discEntity.tracks?.filter { it is RockComposition }?.map { trackMapper.toDto(it) }!!
+        val classicalTracks = discEntity.tracks?.filter { it is ClassicalComposition }?.map { trackMapper.toDto(it) }!!
+        val otherTracks = discEntity.tracks?.filter { it !is RockComposition && it !is ClassicalComposition }?.map { trackMapper.toDto(it) }!!
+        return rockTracks + classicalTracks + otherTracks
     }
 }

@@ -2,6 +2,7 @@ package com.project.audiorecording.audiorecordingserver.service
 
 import com.project.audiorecording.audiorecordingserver.domain.dto.RockCompositionDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.RockComposition
+import com.project.audiorecording.audiorecordingserver.mapper.DiscMapper
 import com.project.audiorecording.audiorecordingserver.mapper.RockCompositionMapper
 import com.project.audiorecording.audiorecordingserver.repository.RockCompositionRepository
 import lombok.RequiredArgsConstructor
@@ -17,11 +18,13 @@ class RockCompositionService(
     private val rockCompositionRepository: RockCompositionRepository,
     private val rockCompositionMapper: RockCompositionMapper,
     private val trackService: TrackService,
+    private val discMapper: DiscMapper
 ) : CrudService<RockComposition, RockCompositionDto, UUID> {
     override fun create(dto: RockCompositionDto): RockCompositionDto {
         val rockComposition = getEntity(dto)
         val rockDto =  rockCompositionMapper.toDto(rockCompositionRepository.save(rockComposition))
-        trackService.updateDisc(rockDto.disc!!.id!!)
+        rockDto.disc = discMapper.toDto(rockComposition.disc!!)
+        trackService.updateDisc(rockComposition.disc?.id!!)
         return rockDto
     }
 
@@ -33,7 +36,8 @@ class RockCompositionService(
         requireOne(dto.id!!)
         val updatedRockComposition = getEntity(dto)
         val rockDto = rockCompositionMapper.toDto(rockCompositionRepository.save(updatedRockComposition))
-        trackService.updateDisc(rockDto.disc!!.id!!)
+        trackService.updateDisc(updatedRockComposition.disc!!.id!!)
+        rockDto.disc = discMapper.toDto(updatedRockComposition.disc!!)
         return rockDto
     }
 

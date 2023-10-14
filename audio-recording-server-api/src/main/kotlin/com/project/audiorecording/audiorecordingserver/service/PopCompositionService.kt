@@ -2,6 +2,7 @@ package com.project.audiorecording.audiorecordingserver.service
 
 import com.project.audiorecording.audiorecordingserver.domain.dto.PopCompositionDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.PopComposition
+import com.project.audiorecording.audiorecordingserver.mapper.DiscMapper
 import com.project.audiorecording.audiorecordingserver.mapper.PopCompositionMapper
 import com.project.audiorecording.audiorecordingserver.repository.PopCompositionRepository
 import lombok.RequiredArgsConstructor
@@ -17,11 +18,13 @@ class PopCompositionService(
     private val popCompositionRepository: PopCompositionRepository,
     private val popCompositionMapper: PopCompositionMapper,
     private val trackService: TrackService,
+    private val discMapper: DiscMapper
 ) : CrudService<PopComposition, PopCompositionDto, UUID> {
     override fun create(dto: PopCompositionDto): PopCompositionDto {
         val popComposition = getEntity(dto)
         val popDto = popCompositionMapper.toDto(popCompositionRepository.save(popComposition))
-        trackService.updateDisc(popDto.disc!!.id!!)
+        popDto.disc = discMapper.toDto(popComposition.disc!!)
+        trackService.updateDisc(popComposition.disc!!.id!!)
         return popDto
     }
 
@@ -33,6 +36,7 @@ class PopCompositionService(
         requireOne(dto.id!!)
         val updatedPopComposition = getEntity(dto)
         val popDto = popCompositionMapper.toDto(popCompositionRepository.save(updatedPopComposition))
+        popDto.disc = discMapper.toDto(updatedPopComposition.disc!!)
         trackService.updateDisc(popDto.disc!!.id!!)
         return popDto
     }

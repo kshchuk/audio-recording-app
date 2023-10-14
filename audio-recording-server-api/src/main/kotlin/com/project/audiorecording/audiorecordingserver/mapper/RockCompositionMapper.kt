@@ -32,6 +32,7 @@ class RockCompositionMapper : IMapper<RockComposition, RockCompositionDto, UUID>
         rockComposition.author = entity.author
         rockComposition.duration = entity.duration
 
+
         return rockComposition
     }
 

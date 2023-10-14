@@ -3,6 +3,7 @@ package com.project.audiorecording.audiorecordingserver.service
 import com.project.audiorecording.audiorecordingserver.domain.dto.ClassicalCompositionDto
 import com.project.audiorecording.audiorecordingserver.domain.entity.ClassicalComposition
 import com.project.audiorecording.audiorecordingserver.mapper.ClassicalCompositionMapper
+import com.project.audiorecording.audiorecordingserver.mapper.DiscMapper
 import com.project.audiorecording.audiorecordingserver.repository.ClassicalCompositionRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
@@ -17,11 +18,13 @@ class ClassicalCompositionService(
     private val classicalCompositionRepository: ClassicalCompositionRepository,
     private val classicalCompositionMapper: ClassicalCompositionMapper,
     private val trackService: TrackService,
+    private val discMapper: DiscMapper
 ) : CrudService<ClassicalComposition, ClassicalCompositionDto, UUID> {
     override fun create(dto: ClassicalCompositionDto): ClassicalCompositionDto {
         val classicalComposition = getEntity(dto)
         val classicalDto = classicalCompositionMapper.toDto(classicalCompositionRepository.save(classicalComposition))
-        trackService.updateDisc(classicalDto.disc!!.id!!)
+        classicalDto.disc = discMapper.toDto(classicalComposition.disc!!)
+        trackService.updateDisc(classicalComposition.disc!!.id!!)
         return classicalDto
     }
 
@@ -33,7 +36,8 @@ class ClassicalCompositionService(
         requireOne(dto.id!!)
         val updatedClassicalComposition = getEntity(dto)
         val classicalDto =  classicalCompositionMapper.toDto(classicalCompositionRepository.save(updatedClassicalComposition))
-        trackService.updateDisc(classicalDto.disc!!.id!!)
+        classicalDto.disc = discMapper.toDto(updatedClassicalComposition.disc!!)
+        trackService.updateDisc(updatedClassicalComposition.disc!!.id!!)
         return classicalDto
     }
 

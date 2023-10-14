@@ -17,7 +17,9 @@ class TrackMapper : IMapper<Track, TrackDto, UUID> {
             id = foundEntity.id,
             title = dto.title,
             duration = dto.duration,
-            disc = foundEntity.disc
+            disc = foundEntity.disc,
+            author = dto.author
+
         )
         return track
     }
