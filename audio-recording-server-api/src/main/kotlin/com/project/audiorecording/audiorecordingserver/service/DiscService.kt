@@ -10,6 +10,7 @@ import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.DiscRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 
 @Service
@@ -45,6 +46,7 @@ class DiscService(
         discRepository.deleteById(id)
     }
 
+    @Transactional
     override fun getAll(): List<DiscDto> {
         return discMapper.ToDtoList(discRepository.findAll())!!
     }
