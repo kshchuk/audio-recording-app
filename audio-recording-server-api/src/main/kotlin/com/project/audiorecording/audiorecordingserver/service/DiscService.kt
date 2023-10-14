@@ -10,7 +10,6 @@ import com.project.audiorecording.audiorecordingserver.mapper.IMapper
 import com.project.audiorecording.audiorecordingserver.repository.DiscRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 
 @Service
@@ -24,8 +23,6 @@ class DiscService(
 
     override fun create(dto: DiscDto): DiscDto {
         val disc = discMapper.toEntity(dto, Disc())
-        val tracks = dto.tracks?.map { trackMapper.toEntity(trackService.create(it), Track()) }
-        disc.tracks = tracks?.toMutableList()
         return discMapper.toDto(discRepository.save(disc))
     }
 
@@ -36,8 +33,6 @@ class DiscService(
     override fun update(dto: DiscDto): DiscDto {
         val disc = requireOne(dto.id!!)
         val updatedDisc = discMapper.toEntity(dto, disc)
-        val tracks = dto.tracks?.map { trackMapper.toEntity(trackService.create(it), Track()) }
-        updatedDisc.tracks = tracks?.toMutableList()
         return discMapper.toDto(discRepository.save(disc))
     }
 
@@ -46,14 +41,13 @@ class DiscService(
         discRepository.deleteById(id)
     }
 
-    @Transactional
     override fun getAll(): List<DiscDto> {
         return discMapper.ToDtoList(discRepository.findAll())!!
     }
 
     override fun getAllTracks(discId: UUID) : List<TrackDto> {
         val disc = requireOne(discId)
-        return discMapper.toDto(disc).tracks!!
+        return disc.tracks?.map { trackMapper.toDto(it) }!!
     }
 
     override fun requireOne(id: UUID): Disc {

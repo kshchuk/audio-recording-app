@@ -92,16 +92,20 @@ class AudioRecordingServerApplication(
     override fun addTrackToDisc() {
         println("Enter disc id")
         val discId = readlnOrNull() ?: ""
-        addTrackToDisc(UUID.fromString(discId))
+        try {
+            addTrackToDisc(UUID.fromString(discId))
+        } catch (e: Exception) {
+            println("Invalid disc id")
+        }
     }
 
+    @Throws(Exception::class)
     private fun addTrackToDisc(discId : UUID) {
         println("Enter track type")
         println("1. Rock")
         println("2. Pop")
         println("3. Classical")
 
-        try {
             val disc = discController.getOne(discId).body!!
             val input = readlnOrNull() ?: ""
             when (input) {
@@ -119,9 +123,6 @@ class AudioRecordingServerApplication(
                 }
                 else -> println("Invalid input")
             }
-        } catch (e: Exception) {
-            println("Invalid disc id")
-        }
     }
 
     private fun getTrack(disc: DiscDto): TrackDto {
@@ -190,8 +191,8 @@ class AudioRecordingServerApplication(
         println("Enter disc id")
         val discId = readlnOrNull() ?: ""
         try {
-            val disc = discController.getOne(UUID.fromString(discId)).body!!
-            disc.tracks?.forEach { track ->
+            val tracks = discController.getAllTracks(UUID.fromString(discId)).body!!
+            tracks.forEach { track ->
                 println("Track id: ${track.id}")
                 println("Track title: ${track.title}")
                 println("Track duration: ${track.duration}")

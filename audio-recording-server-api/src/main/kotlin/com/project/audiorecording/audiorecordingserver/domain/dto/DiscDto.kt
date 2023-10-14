@@ -11,6 +11,5 @@ data class DiscDto(
     var id: UUID? = null,
     var name: String? = null,
     var trackNumber: Int? = null,
-    var tracks: List<TrackDto>? = null,
     var totalDuration: Duration? = null
 ) : Serializable

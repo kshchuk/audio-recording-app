@@ -25,7 +25,6 @@ class DiscMapper : IMapper<Disc, DiscDto, UUID> {
             name = entity.name,
             trackNumber = entity.trackNumber,
             totalDuration = entity.totalDuration,
-            tracks = entity.tracks?.map { TrackMapper().toDto(it) }
         )
     }
 
