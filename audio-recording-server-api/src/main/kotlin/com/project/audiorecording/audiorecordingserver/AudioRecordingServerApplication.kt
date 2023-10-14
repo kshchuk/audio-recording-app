@@ -13,7 +13,7 @@ import java.time.Duration
 import java.util.*
 import kotlin.system.exitProcess
 
-val classInspector : ClassInspector = ClassInspector()
+val classInspector: ClassInspector = ClassInspector()
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = ["com.project.audiorecording.audiorecordingserver.repository"])
@@ -25,21 +25,21 @@ class AudioRecordingServerApplication(
     override val classicalCompositionController: ClassicalCompositionController,
 ) : App {
 
-
     override fun start() {
         var running = true
 
         while (running) {
-            println("1. Create disc")
-            println("2. Add track to disc")
+            println("=== Audio Recording Server ===")
+            println("1. Create a new disc")
+            println("2. Add a track to a disc")
             println("3. List all discs")
-            println("4. List tracks of disc")
-            println("5. Calculate duration of disc")
+            println("4. List tracks of a disc")
+            println("5. Calculate the duration of a disc")
             println("6. Sort tracks by style")
             println("7. Find tracks by length range")
             println("8. List all tracks")
-            println("9. Remove track from disc")
-            println("10. Remove disc")
+            println("9. Remove a track")
+            println("10. Remove a disc")
             println("11. Exit")
 
             val input = readlnOrNull() ?: ""
@@ -63,10 +63,11 @@ class AudioRecordingServerApplication(
     }
 
     override fun createDisc() {
-        println("Enter disc name")
+        println("=== Create a New Disc ===")
+        println("Enter disc name:")
         val name = readlnOrNull() ?: ""
-        println("Enter disc track number (you need to enter tracks later)")
-        val trackNumber = readlnOrNull() ?.toInt() ?: 0
+        println("Enter the number of tracks for the disc (you can add tracks later):")
+        val trackNumber = readlnOrNull()?.toInt() ?: 0
 
         var disc = DiscDto(
             name = name,
@@ -94,7 +95,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun addTrackToDisc() {
-        println("Enter disc id")
+        println("=== Add a Track to a Disc ===")
+        println("Enter disc id:")
         val discId = readlnOrNull() ?: ""
         try {
             addTrackToDisc(UUID.fromString(discId))
@@ -104,29 +106,29 @@ class AudioRecordingServerApplication(
     }
 
     @Throws(Exception::class)
-    private fun addTrackToDisc(discId : UUID) {
+    private fun addTrackToDisc(discId: UUID) {
         println("Enter track type")
         println("1. Rock")
         println("2. Pop")
         println("3. Classical")
 
-            val disc = discController.getOne(discId).body!!
-            val input = readlnOrNull() ?: ""
-            when (input) {
-                "1" -> {
-                    val rockComposition = getRockComposition(disc)
-                    printOperationResult(rockCompositionController.create(rockComposition))
-                }
-                "2" -> {
-                    val popComposition = getPopComposition(disc)
-                    printOperationResult(popCompositionController.create(popComposition))
-                }
-                "3" -> {
-                    val classicalComposition = getClassicalComposition(disc)
-                    printOperationResult(classicalCompositionController.create(classicalComposition))
-                }
-                else -> println("Invalid input")
+        val disc = discController.getOne(discId).body!!
+        val input = readlnOrNull() ?: ""
+        when (input) {
+            "1" -> {
+                val rockComposition = getRockComposition(disc)
+                printOperationResult(rockCompositionController.create(rockComposition))
             }
+            "2" -> {
+                val popComposition = getPopComposition(disc)
+                printOperationResult(popCompositionController.create(popComposition))
+            }
+            "3" -> {
+                val classicalComposition = getClassicalComposition(disc)
+                printOperationResult(classicalCompositionController.create(classicalComposition))
+            }
+            else -> println("Invalid input")
+        }
     }
 
     private fun getTrack(disc: DiscDto): TrackDto {
@@ -189,7 +191,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun listTracksOfDisc() {
-        println("Enter disc id")
+        println("=== List Tracks of a Disc ===")
+        println("Enter disc id:")
         val discId = readlnOrNull() ?: ""
         try {
             val tracks = discController.getAllTracks(UUID.fromString(discId)).body!!
@@ -202,7 +205,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun calculateDurationOfDisc() {
-        println("Enter disc id")
+        println("=== Calculate Duration of a Disc ===")
+        println("Enter disc id:")
         val discId = readlnOrNull() ?: ""
         try {
             val totalDuration = discController.calculateDuration(UUID.fromString(discId)).toString()
@@ -213,7 +217,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun sortTracksByStyle() {
-        println("Enter disc id")
+        println("=== Sort Tracks by Style ===")
+        println("Enter disc id:")
         val discId = readlnOrNull() ?: ""
         try {
             discController.getSortedByStyle(UUID.fromString(discId)).forEach { track ->
@@ -225,7 +230,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun findTracksByLengthRange() {
-        println("Enter disc id")
+        println("=== Find Tracks by Length Range ===")
+        println("Enter disc id:")
         val discId = readlnOrNull() ?: ""
         try {
             println("Enter min duration (in seconds)")
@@ -248,7 +254,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun removeTrack() {
-        println("Enter track id")
+        println("=== Remove a Track ===")
+        println("Enter track id:")
         val trackId = readlnOrNull() ?: ""
         try {
             printOperationResult(trackController.delete(UUID.fromString(trackId)))
@@ -258,7 +265,8 @@ class AudioRecordingServerApplication(
     }
 
     override fun removeDisc() {
-        println("Enter disc id")
+        println("=== Remove a Disc ===")
+        println("Enter disc id:")
         val discId = readlnOrNull() ?: ""
         try {
             discController.delete(UUID.fromString(discId))
@@ -275,6 +283,7 @@ class AudioRecordingServerApplication(
         app.start()
     }
 }
+
 fun main(args: Array<String>) {
     SpringApplication.run(AudioRecordingServerApplication::class.java, *args)
 }

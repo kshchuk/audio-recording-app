@@ -6,3 +6,4 @@ pluginManagement {
 	}
 }
 rootProject.name = "audio-recording-server"
+
