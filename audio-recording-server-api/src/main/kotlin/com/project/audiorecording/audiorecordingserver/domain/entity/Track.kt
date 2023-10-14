@@ -21,7 +21,7 @@ open class Track(
     @Column(name = "author", nullable = false, length = 100)
     open var author: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "disc_id")
     open var disc: Disc? = null,

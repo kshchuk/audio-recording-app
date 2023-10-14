@@ -4,11 +4,8 @@ import java.util.*
 
 import com.project.audiorecording.audiorecordingserver.domain.dto.DiscDto
 import com.project.audiorecording.audiorecordingserver.domain.dto.TrackDto
-import com.project.audiorecording.audiorecordingserver.domain.entity.ClassicalComposition
-import com.project.audiorecording.audiorecordingserver.domain.entity.Disc
-import com.project.audiorecording.audiorecordingserver.domain.entity.RockComposition
-import com.project.audiorecording.audiorecordingserver.domain.entity.Track
-import com.project.audiorecording.audiorecordingserver.mapper.IMapper
+import com.project.audiorecording.audiorecordingserver.domain.entity.*
+import com.project.audiorecording.audiorecordingserver.mapper.*
 import com.project.audiorecording.audiorecordingserver.repository.DiscRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
@@ -19,8 +16,12 @@ import java.time.Duration
 @RequiredArgsConstructor
 class DiscService(
     private val discRepository: DiscRepository,
-    private val discMapper: IMapper<Disc, DiscDto, UUID>,
-    private val trackMapper: IMapper<Track, TrackDto, UUID>,
+    private val discMapper: DiscMapper,
+    private val trackMapper: TrackMapper,
+    private val trackService: TrackService,
+    private val popCompositionMapper: PopCompositionMapper,
+    private val rockCompositionMapper: RockCompositionMapper,
+    private val classicalCompositionMapper: ClassicalCompositionMapper,
 ) : IDiscService {
 
     override fun create(dto: DiscDto): DiscDto {
@@ -49,7 +50,7 @@ class DiscService(
 
     override fun getAllTracks(discId: UUID) : List<TrackDto> {
         val disc = requireOne(discId)
-        return disc.tracks?.map { trackMapper.toDto(it) }!!
+        return trackService.getDtos(disc.tracks!!)
     }
 
     override fun requireOne(id: UUID): Disc {
@@ -87,9 +88,9 @@ class DiscService(
     // specified in the subclass of the track class
     override fun sortSongsByStyle(disc: UUID) : List<TrackDto> {
         val discEntity = requireOne(disc)
-        val rockTracks = discEntity.tracks?.filter { it is RockComposition }?.map { trackMapper.toDto(it) }!!
-        val classicalTracks = discEntity.tracks?.filter { it is ClassicalComposition }?.map { trackMapper.toDto(it) }!!
-        val otherTracks = discEntity.tracks?.filter { it !is RockComposition && it !is ClassicalComposition }?.map { trackMapper.toDto(it) }!!
+        val rockTracks = discEntity.tracks?.filter { it is RockComposition }?.map { rockCompositionMapper.toDto(it as RockComposition) }!!
+        val classicalTracks = discEntity.tracks?.filter { it is ClassicalComposition }?.map { classicalCompositionMapper.toDto(it as ClassicalComposition) }!!
+        val otherTracks = discEntity.tracks?.filter { it !is RockComposition && it !is ClassicalComposition }?.map { popCompositionMapper.toDto(it as PopComposition) }!!
         return rockTracks + classicalTracks + otherTracks
     }
 }

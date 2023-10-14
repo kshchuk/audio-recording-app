@@ -217,11 +217,7 @@ class AudioRecordingServerApplication(
         val discId = readlnOrNull() ?: ""
         try {
             discController.getSortedByStyle(UUID.fromString(discId)).forEach { track ->
-                println("Track id: ${track.id}")
-                println("Track title: ${track.title}")
-                println("Track duration: ${track.duration}")
-                println("Track author: ${track.author}")
-                println("Track disc: ${track.disc}")
+                classInspector.printObjectProperties(track)
             }
         } catch (e: Exception) {
             println("Invalid disc id")
@@ -237,11 +233,7 @@ class AudioRecordingServerApplication(
             println("Enter max duration (in seconds)")
             val maxDuration = Duration.ofSeconds(readlnOrNull()?.toLong() ?: 0)
             discController.findSongsByLength(UUID.fromString(discId), minDuration, maxDuration).forEach { track ->
-                println("Track id: ${track.id}")
-                println("Track title: ${track.title}")
-                println("Track duration: ${track.duration}")
-                println("Track author: ${track.author}")
-                println("Track disc: ${track.disc}")
+                classInspector.printObjectProperties(track)
             }
         } catch (e: Exception) {
             println("Invalid disc id")
@@ -251,11 +243,7 @@ class AudioRecordingServerApplication(
     override fun listAllTracks() {
         val tracks = trackController.getAll().body!!
         tracks.forEach { track ->
-            println("Track id: ${track.id}")
-            println("Track title: ${track.title}")
-            println("Track duration: ${track.duration}")
-            println("Track author: ${track.author}")
-            println("Track disc: ${track.disc}")
+            classInspector.printObjectProperties(track)
         }
     }
 

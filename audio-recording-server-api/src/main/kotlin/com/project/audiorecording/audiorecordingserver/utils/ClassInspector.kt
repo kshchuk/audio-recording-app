@@ -22,7 +22,7 @@ class ClassInspector {
 
     fun printObjectProperties(obj: Any) {
         val clazz = obj::class
-        println("Object Class Name: ${clazz.qualifiedName}")
+        println("Object Class Name: ${clazz.simpleName}")
 
         clazz.memberProperties.forEach { prop ->
             val value = prop.getter.call(obj)
