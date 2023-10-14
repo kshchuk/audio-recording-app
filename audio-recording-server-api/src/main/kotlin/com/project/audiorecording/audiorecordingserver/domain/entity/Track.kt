@@ -18,7 +18,7 @@ open class Track(
     @Column(name = "title", nullable = false)
     open var title: String? = null,
 
-    @Column(name = "author", length = 100)
+    @Column(name = "author", nullable = false, length = 100)
     open var author: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)

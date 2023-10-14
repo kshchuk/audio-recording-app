@@ -18,7 +18,7 @@ data class Disc(
     @Column(name = "track_number", nullable = false)
     var trackNumber: Int? = null,
 
-    @OneToMany(mappedBy = "disc", cascade = [CascadeType.REMOVE])
+    @OneToMany(mappedBy = "disc", fetch = FetchType.EAGER, cascade = [CascadeType.REMOVE])
     var tracks: MutableList<Track>? = null,
 
     @Column(name = "total_duration")

@@ -6,11 +6,14 @@ import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import com.project.audiorecording.audiorecordingserver.utils.ClassInspector
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.http.ResponseEntity
 import java.time.Duration
 import java.util.*
+import kotlin.system.exitProcess
+
+val classInspector : ClassInspector = ClassInspector()
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = ["com.project.audiorecording.audiorecordingserver.repository"])
@@ -20,7 +23,6 @@ class AudioRecordingServerApplication(
     override val rockCompositionController: RockCompositionController,
     override val popCompositionController: PopCompositionController,
     override val classicalCompositionController: ClassicalCompositionController,
-
 ) : App {
 
 
@@ -56,6 +58,8 @@ class AudioRecordingServerApplication(
                 else -> println("Invalid input")
             }
         }
+
+        exitProcess(0)
     }
 
     override fun createDisc() {
@@ -180,10 +184,7 @@ class AudioRecordingServerApplication(
     override fun listAllDiscs() {
         val discs = discController.getAll().body!!
         discs.forEach { disc ->
-            println("Disc id: ${disc.id}")
-            println("Disc name: ${disc.name}")
-            println("Disc track number: ${disc.trackNumber}")
-            println("Disc total duration: ${disc.totalDuration}")
+            classInspector.printObjectProperties(disc)
         }
     }
 
@@ -193,11 +194,7 @@ class AudioRecordingServerApplication(
         try {
             val tracks = discController.getAllTracks(UUID.fromString(discId)).body!!
             tracks.forEach { track ->
-                println("Track id: ${track.id}")
-                println("Track title: ${track.title}")
-                println("Track duration: ${track.duration}")
-                println("Track author: ${track.author}")
-                println("Track disc: ${track.disc}")
+                classInspector.printObjectProperties(track)
             }
         } catch (e: Exception) {
             println("Invalid disc id")
@@ -208,7 +205,7 @@ class AudioRecordingServerApplication(
         println("Enter disc id")
         val discId = readlnOrNull() ?: ""
         try {
-            val totalDuration = discController.calculateDuration(UUID.fromString(discId))
+            val totalDuration = discController.calculateDuration(UUID.fromString(discId)).toString()
             println("Disc total duration: $totalDuration")
         } catch (e: Exception) {
             println("Invalid disc id")
@@ -266,7 +263,7 @@ class AudioRecordingServerApplication(
         println("Enter track id")
         val trackId = readlnOrNull() ?: ""
         try {
-            trackController.delete(UUID.fromString(trackId))
+            printOperationResult(trackController.delete(UUID.fromString(trackId)))
         } catch (e: Exception) {
             println("Invalid track id")
         }
